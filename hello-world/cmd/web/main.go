@@ -21,9 +21,16 @@ func main() {
 	}
 
 	app.TemplateCache = tc
+	app.UseCache = true
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
+	repo := handlers.NewRepo(&app)
+
+	handlers.NewHandlers(repo)
+
+	render.NewTemplates(&app)
+
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
 
 	//added to ignore browser favicon request that results in an extra cache hit
 	http.HandleFunc("/favicon.ico", doNothing)

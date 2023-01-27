@@ -2,14 +2,26 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/ryjack-horseman/BMWA/hello-world/hello-world/pkg/config"
 	"github.com/ryjack-horseman/BMWA/hello-world/hello-world/pkg/handlers"
+	"github.com/ryjack-horseman/BMWA/hello-world/hello-world/pkg/render"
 )
 
 const portNumber = ":8080"
 
 func main() {
+	var app config.AppConfig
+
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template Cache ")
+	}
+
+	app.TemplateCache = tc
+
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
 

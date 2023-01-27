@@ -6,12 +6,20 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/ryjack-horseman/BMWA/hello-world/pkg/config"
 )
+
+var app *config.AppConfig
+
+func NewTemplates(a *config.AppConfig) {
+	app = a
+}
 
 // renders templates using html/template
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
-	tc, err := createTemplateCache()
+	tc, err := CreateTemplateCache()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,7 +42,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	}
 }
 
-func createTemplateCache() (map[string]*template.Template, error) {
+func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 
 	//get all of the files named *.page.html from ./templates

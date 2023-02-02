@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -29,14 +28,15 @@ func main() {
 
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
 
-	//added to ignore browser favicon request that results in an extra cache hit
-	http.HandleFunc("/favicon.ico", doNothing)
-
-	fmt.Printf("Starting application on port %s\n", portNumber)
-	_ = http.ListenAndServe(portNumber, nil)
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func doNothing(w http.ResponseWriter, r *http.Request) {}
